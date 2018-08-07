@@ -12,14 +12,12 @@ class CategoryHeader extends Component {
 class FormAddCategory extends Component {
   constructor(props) {
     super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.insertCategory = this.insertCategory.bind(this);
   }
   
-  handleChange(e) {
+  handleChange = (e) => {
     this.props.onHandleChange(e.target.value);
   }
-  insertCategory() {
+  insertCategory = () => {
     this.props.onInsertCategory();
   }
   
@@ -29,9 +27,9 @@ class FormAddCategory extends Component {
         <input
           type="text"
           placeholder="Input category"
-          onChange={ this.handleChange }
-          />
-        <button onClick={ this.insertCategory }>Add</button>
+          onChange={(e) => { this.handleChange(e) }}
+        />
+        <button onClick={(e) => { this.insertCategory(e) }}>Add</button>
       </div>
     );
   }
@@ -40,56 +38,46 @@ class FormAddCategory extends Component {
 class CategoryTable extends Component {
   constructor(props) {
     super(props);
-    this.formUpdate = this.formUpdate.bind(this);
-    this.updateButton = this.updateButton.bind(this);
-    this.deleteCategory = this.deleteCategory.bind(this)
-    this.showFormEdit = this.showFormEdit.bind(this)
-    this.editCategory = this.editCategory.bind(this)
-    this.handleChange2 = this.handleChange2.bind(this)
-    this.cancelEdit = this.cancelEdit.bind(this)
   }
 
-  formUpdate(isEdit, name, index, id, editValue) {
-    return (isEdit && id==index) ? <input type="text" value={editValue} onChange={ this.handleChange2} /> : name
+  formUpdate = (isEdit, name, index, id, editValue) => {
+    return (isEdit && id==index) ? <input type="text" value={editValue} onChange={(e) => { this.handleChange2(e) }} /> : name
   }
   
-  updateButton(isEdit, name, index, id) {
-    let beforeButton = <button onClick={this.showFormEdit.bind(this, name, index)}>Edit</button>
-    let afterButton = <div><button onClick={this.editCategory.bind(this, id)}>Save</button><button onClick={this.cancelEdit}>Cancel</button></div>
+  updateButton = (isEdit, name, index, id) => {
+    let beforeButton = <button onClick={() => { this.showFormEdit(name, index) }}>Edit</button>
+    let afterButton = <div><button onClick={() => { this.editCategory(id) }}>Save</button><button onClick={() => { this.cancelEdit() }}>Cancel</button></div>
     return (isEdit && id==index) ? afterButton : beforeButton;
   }
 
-  deleteCategory(index) {
+  deleteCategory = (index) => {
     this.props.onDeleteCategory(index);
   }
-  showFormEdit(name, index) {
+  showFormEdit = (name, index) => {
     this.props.onShowFormEdit(name, index);
   }
-  editCategory(id) {
+  editCategory = (id) => {
     this.props.onEditCategory(id);
   }
-  handleChange2(e) {
+  handleChange2 = (e) => {
     this.props.onHandleChange2(e.target.value);
   }
 
-  cancelEdit() {
+  cancelEdit = () => {
     this.props.onCancelEdit();
   }
 
   render () {
-    const categories = this.props.categories;
-    const isEdit = this.props.isEdit;
-    const editValue = this.props.editValue;
-    const id = this.props.id;
+    const { id, categories, isEdit, editValue } = this.props
     return (
       <table>
         <CategoryHeader />
         {categories.map((name, index) => {
-          return <tr>
-                <td>{this.formUpdate(isEdit, name, index, id, editValue)}</td>
-                <td class="w">{this.updateButton(isEdit, name, index, id)}</td>
-                <td class="w"><button onClick={this.deleteCategory.bind(this, index)}>Delete</button></td>
-            </tr>
+          return <tr key={index}>
+            <td>{this.formUpdate(isEdit, name, index, id, editValue)}</td>
+            <td class="w">{this.updateButton(isEdit, name, index, id)}</td>
+            <td class="w"><button onClick={() => { this.deleteCategory(index) }}>Delete</button></td>
+          </tr>
         })}
       </table>
     );
@@ -106,54 +94,51 @@ class ListCategory extends React.Component {
       isEdit : false,
       id :'',
     }
-    this.insertCategory = this.insertCategory.bind(this)
-    this.editCategory = this.editCategory.bind(this)
-    this.deleteCategory = this.deleteCategory.bind(this)
-    this.cancelEdit = this.cancelEdit.bind(this)
-    this.showFormEdit = this.showFormEdit.bind(this)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleChange2 = this.handleChange2.bind(this)
   }
   
-  insertCategory() {
-    console.log(this.state.textvalue);
-    this.state.categories.push(this.state.textvalue)
+  insertCategory = () => {
+    const { categories } = this.state
+    categories.push(this.state.textvalue)
+
     this.setState(
-      this.state
+      categories,
     )
   }
 
-  editCategory(id) {
+  editCategory = (id) => {
     this.state.categories[id] = this.state.editValue
     this.setState({
-      categories:this.state.categories,
+      categories: this.state.categories,
       isEdit:false
     })
   }
   
-  deleteCategory(index) {
-    delete this.state.categories[index] ? this.setState({ categories:this.state.categories }) : ''
+  deleteCategory = (index) => {
+    const categories = this.state.categories.filter((item) => {
+      return item !== this.state.categories[index]
+    })
+    this.setState({ categories })
   }
 
-  cancelEdit() {
+  cancelEdit = () => {
     this.setState({
       isEdit : false
     })
   }
   
-  handleChange(textvalue) {
+  handleChange = (textvalue) => {
     this.setState({
       textvalue:textvalue
     })
   }
   
-  handleChange2(editValue) {
+  handleChange2 = (editValue) => {
     this.setState({
       editValue:editValue
     })
   }
   
-  showFormEdit(name, index) {
+  showFormEdit = (name, index) => {
     this.setState({
       isEdit:true,
       editValue:name,
