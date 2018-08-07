@@ -41,7 +41,7 @@ class CategoryTable extends Component {
   }
 
   formUpdate = (isEdit, name, index, id, editValue) => {
-    return (isEdit && id==index) ? <input type="text" value={editValue} onChange={(e) => { this.handleChange2(e) }} /> : name
+    return (isEdit && id==index) ? <input type="text" value={editValue} onChange={(e) => { this.handleChangeValue(e) }} /> : name
   }
   
   updateButton = (isEdit, name, index, id) => {
@@ -59,8 +59,8 @@ class CategoryTable extends Component {
   editCategory = (id) => {
     this.props.onEditCategory(id);
   }
-  handleChange2 = (e) => {
-    this.props.onHandleChange2(e.target.value);
+  handleChangeValue = (e) => {
+    this.props.onHandleChangeValue(e.target.value);
   }
 
   cancelEdit = () => {
@@ -132,7 +132,7 @@ class ListCategory extends React.Component {
     })
   }
   
-  handleChange2 = (editValue) => {
+  handleChangeValue = (editValue) => {
     this.setState({
       editValue:editValue
     })
@@ -162,7 +162,7 @@ class ListCategory extends React.Component {
           onDeleteCategory={this.deleteCategory}
           onShowFormEdit={this.showFormEdit}
           onEditCategory={this.editCategory}
-          onHandleChange2={this.handleChange2}
+          onHandleChangeValue={this.handleChangeValue}
           onCancelEdit={this.cancelEdit}
         />
       </div>
